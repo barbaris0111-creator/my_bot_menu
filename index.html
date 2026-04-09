@@ -171,7 +171,8 @@
 
 <script>
 // ─── Данные меню ──────────────────────────────────────────
-const API_BASE = window.location.origin;
+const LOCAL_API_BASE = "http://localhost:8081";
+const API_BASE = window.location.origin === LOCAL_API_BASE ? window.location.origin : LOCAL_API_BASE;
 const MENU_API_URL = `${API_BASE}/menu-data`;
 
 const EMOJI_MAP = {
@@ -184,6 +185,18 @@ const EMOJI_MAP = {
   "Донер в лаваше": "🫓",
   "Пицца": "🍕",
 };
+
+const DEFAULT_SHOPS = ["Найман", "Жасмин", "Арша", "Провиант"];
+const DEFAULT_MENU_ITEMS = [
+  { id: 1, name: "Гирос", prices: { "Найман": 640, "Жасмин": 640, "Арша": 640, "Провиант": 640 }, emoji: "🥙" },
+  { id: 2, name: "Гриль", prices: { "Найман": 640, "Жасмин": 640, "Арша": 640, "Провиант": 640 }, emoji: "🍖" },
+  { id: 3, name: "Классика", prices: { "Найман": 440, "Жасмин": 440, "Арша": 440, "Провиант": 440 }, emoji: "🥪" },
+  { id: 4, name: "Хот-дог", prices: { "Найман": 340, "Жасмин": 340, "Арша": 340, "Провиант": 340 }, emoji: "🌭" },
+  { id: 5, name: "Френч", prices: { "Найман": 620, "Жасмин": 620, "Арша": 620, "Провиант": 620 }, emoji: "🥖" },
+  { id: 6, name: "Донер в багете", prices: { "Найман": 620, "Жасмин": 620, "Арша": 620, "Провиант": 620 }, emoji: "🥗" },
+  { id: 7, name: "Донер в лаваше", prices: { "Найман": 620, "Жасмин": 620, "Арша": 620, "Провиант": 620 }, emoji: "🫓" },
+  { id: 8, name: "Пицца", prices: { "Найман": 330, "Жасмин": 330, "Арша": 330, "Провиант": 330 }, emoji: "🍕" },
+];
 
 let MENU = [];
 const qty = {};
@@ -228,10 +241,16 @@ async function loadMenu() {
     render();
   } catch (error) {
     console.error(error);
-    document.getElementById("main").innerHTML = `
-      <p class="empty-hint">${error.message}</p>
-      <p class="empty-hint">Проверьте, запущен ли бот и доступен ли API /menu-data.</p>
-      <button onclick="location.reload()" class="order-btn-fallback">Перезагрузить</button>`;
+
+    MENU = DEFAULT_MENU_ITEMS;
+    MENU.forEach(item => qty[item.id] = 0);
+    document.getElementById("shop-select").innerHTML = DEFAULT_SHOPS
+      .map(shop => `<option value="${shop}">${shop}</option>`)
+      .join("");
+    render();
+
+    emptyHint.textContent = "Прайс недоступен, используется запасное меню.";
+    emptyHint.style.opacity = 0.8;
   } finally {
     refreshBtn.disabled = false;
     refreshBtn.textContent = "↻";
