@@ -142,6 +142,7 @@
       <option value="Арша">Арша</option>
       <option value="Провиант">Провиант</option>
     </select>
+    <button id="refresh-btn" class="qty-btn" style="width: 36px; height: 36px; font-size: 16px;">↻</button>
   </div>
 
   <p class="section-label">Меню</p>
@@ -195,7 +196,10 @@ function getItemPrice(item) {
 
 async function loadMenu() {
   const emptyHint = document.getElementById("empty-hint");
+  const refreshBtn = document.getElementById("refresh-btn");
   emptyHint.textContent = "Загрузка прайса...";
+  refreshBtn.disabled = true;
+  refreshBtn.textContent = "⏳";
 
   try {
     const response = await fetch(MENU_API_URL);
@@ -226,7 +230,11 @@ async function loadMenu() {
     console.error(error);
     document.getElementById("main").innerHTML = `
       <p class="empty-hint">${error.message}</p>
-      <p class="empty-hint">Проверьте, запущен ли бот и доступен ли API /menu-data.</p>`;
+      <p class="empty-hint">Проверьте, запущен ли бот и доступен ли API /menu-data.</p>
+      <button onclick="location.reload()" class="order-btn-fallback">Перезагрузить</button>`;
+  } finally {
+    refreshBtn.disabled = false;
+    refreshBtn.textContent = "↻";
   }
 }
 
@@ -249,6 +257,10 @@ if (isTg) {
 }
 
 document.getElementById("shop-select").addEventListener("change", render);
+
+document.getElementById("refresh-btn").addEventListener("click", () => {
+  loadMenu();
+});
 
 document.getElementById("items-list").addEventListener("click", e => {
   const btn = e.target.closest("[data-delta]");
@@ -338,6 +350,4 @@ function sendOrder() {
 loadMenu();
 </script>
 </body>
-</html>
-
 </html>
