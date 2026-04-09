@@ -171,8 +171,8 @@
 
 <script>
 // ─── Данные меню ──────────────────────────────────────────
-const API_BASE = "";
-const MENU_API_URL = API_BASE ? `${API_BASE}/menu-data` : "/menu-data";
+const API_BASE = window.location.origin;
+const MENU_API_URL = `${API_BASE}/menu-data`;
 
 const EMOJI_MAP = {
   "Гирос": "🥙",
