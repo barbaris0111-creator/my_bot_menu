@@ -277,16 +277,14 @@ function sendOrder() {
   };
 
   if (isTg) {
-    tg.MainButton.showProgress();         // крутилка пока бот обрабатывает
-    tg.sendData(JSON.stringify(payload)); // отправляет данные в бот и закрывает WebApp
-  } else {
-    // Браузерный fallback
-    console.log("Payload:", JSON.stringify(payload, null, 2));
-    document.getElementById("main").style.display    = "none";
-    document.getElementById("success").style.display = "block";
-    document.getElementById("success-sub").textContent =
-      `${shop} · ${ordered.length} поз. · ${total.toLocaleString()} тг`;
-  }
+    tg.MainButton.showProgress(); 
+    // Отправляем данные
+    tg.sendData(JSON.stringify(payload));
+    
+    // Добавляем страховку: если через 500мс окно не закрылось само, закрываем принудительно
+    setTimeout(() => {
+        tg.close();
+    }, 500);
 }
 
 render();
