@@ -7,125 +7,74 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: var(--tg-theme-bg-color, #fff);
       color: var(--tg-theme-text-color, #111);
       padding: 12px;
     }
-
     .shop-bar {
       background: var(--tg-theme-secondary-bg-color, #f5f5f5);
-      border-radius: 12px;
-      padding: 12px 14px;
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      border-radius: 12px; padding: 12px 14px; margin-bottom: 14px;
+      display: flex; align-items: center; gap: 10px;
     }
     .shop-bar label { font-size: 14px; opacity: 0.6; white-space: nowrap; }
     .shop-bar select {
-      flex: 1;
-      font-size: 14px;
-      background: transparent;
-      border: none;
-      color: var(--tg-theme-text-color, #111);
-      outline: none;
+      flex: 1; font-size: 14px; background: transparent;
+      border: none; color: var(--tg-theme-text-color, #111); outline: none;
     }
-
     .section-label {
-      font-size: 12px;
-      opacity: 0.5;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      margin: 0 4px 8px;
+      font-size: 12px; opacity: 0.5; letter-spacing: 0.06em;
+      text-transform: uppercase; margin: 0 4px 8px;
     }
-
     .items { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
-
     .item-card {
       background: var(--tg-theme-secondary-bg-color, #f5f5f5);
-      border-radius: 12px;
-      padding: 12px 14px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      transition: background 0.15s;
+      border-radius: 12px; padding: 12px 14px;
+      display: flex; align-items: center; gap: 12px;
     }
-    .item-card.active { background: var(--tg-theme-secondary-bg-color, #e8f4ff); }
-    .item-emoji { font-size: 26px; width: 36px; text-align: center; flex-shrink: 0; }
+    .item-card.active { background: #dceeff; }
+    .item-emoji { font-size: 24px; width: 34px; text-align: center; flex-shrink: 0; }
     .item-info { flex: 1; min-width: 0; }
     .item-name { font-size: 14px; font-weight: 500; }
     .item-price { font-size: 12px; opacity: 0.55; margin-top: 2px; }
-
     .qty-ctrl { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
     .qty-btn {
-      width: 30px; height: 30px;
-      border-radius: 50%;
-      border: none;
+      width: 30px; height: 30px; border-radius: 50%; border: none;
       background: var(--tg-theme-button-color, #2481cc);
       color: var(--tg-theme-button-text-color, #fff);
-      font-size: 18px;
-      cursor: pointer;
+      font-size: 18px; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      line-height: 1;
-      opacity: 0.85;
-      transition: opacity 0.1s, transform 0.1s;
+      opacity: 0.85; transition: opacity 0.1s, transform 0.1s;
     }
     .qty-btn:active { opacity: 1; transform: scale(0.92); }
     .qty-num { font-size: 15px; font-weight: 500; min-width: 22px; text-align: center; }
-
     .summary {
       background: var(--tg-theme-secondary-bg-color, #f5f5f5);
-      border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 14px;
+      border-radius: 12px; padding: 14px; margin-bottom: 14px;
     }
     .summary-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13px;
-      opacity: 0.7;
-      margin-bottom: 6px;
+      display: flex; justify-content: space-between;
+      font-size: 13px; opacity: 0.7; margin-bottom: 6px;
     }
     .summary-total {
-      display: flex;
-      justify-content: space-between;
-      font-size: 15px;
-      font-weight: 500;
-      padding-top: 10px;
-      border-top: 1px solid rgba(0,0,0,0.08);
-      margin-top: 4px;
+      display: flex; justify-content: space-between;
+      font-size: 15px; font-weight: 500;
+      padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.08); margin-top: 4px;
     }
-
-    .empty-hint {
-      text-align: center;
-      font-size: 13px;
-      opacity: 0.45;
-      padding: 8px 0 14px;
-    }
-
-    /* Главная кнопка использует MainButton Telegram — CSS не нужен */
-    /* Но на случай fallback для браузера: */
+    .empty-hint { text-align: center; font-size: 13px; opacity: 0.45; padding: 8px 0 14px; }
     .order-btn-fallback {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 12px;
+      width: 100%; padding: 14px; border: none; border-radius: 12px;
       background: var(--tg-theme-button-color, #2481cc);
       color: var(--tg-theme-button-text-color, #fff);
-      font-size: 15px;
-      font-weight: 500;
-      cursor: pointer;
+      font-size: 15px; font-weight: 500; cursor: pointer;
     }
     .order-btn-fallback:disabled { opacity: 0.4; cursor: not-allowed; }
-
-    .success {
-      display: none;
-      text-align: center;
-      padding: 48px 16px;
+    .error-box {
+      background: #fff0f0; border-radius: 10px; padding: 16px;
+      font-size: 13px; color: #c0392b; text-align: center; margin-top: 20px;
     }
+    .success { display: none; text-align: center; padding: 48px 16px; }
     .success-icon { font-size: 56px; margin-bottom: 14px; }
     .success-text { font-size: 17px; font-weight: 500; }
     .success-sub { font-size: 13px; opacity: 0.55; margin-top: 6px; }
@@ -133,20 +82,13 @@
 </head>
 <body>
 
-<div id="main">
+<div id="main" style="display:none">
   <div class="shop-bar">
     <label>Точка:</label>
-    <select id="shop-select">
-      <option value="Найман">Найман</option>
-      <option value="Жасмин">Жасмин</option>
-      <option value="Арша">Арша</option>
-      <option value="Провиант">Провиант</option>
-    </select>
+    <select id="shop-select"></select>
   </div>
-
   <p class="section-label">Меню</p>
   <div class="items" id="items-list"></div>
-
   <div class="summary" id="summary" style="display:none">
     <div id="summary-lines"></div>
     <div class="summary-total">
@@ -155,12 +97,10 @@
     </div>
   </div>
   <p class="empty-hint" id="empty-hint">Выберите товары для заказа</p>
-
-  <!-- Fallback-кнопка для тестирования в браузере -->
-  <button class="order-btn-fallback" id="order-btn-fallback" disabled style="display:none">
-    Заказать
-  </button>
+  <button class="order-btn-fallback" id="order-btn-fallback" disabled style="display:none">Заказать</button>
 </div>
+
+<div id="error-box" style="display:none" class="error-box"></div>
 
 <div class="success" id="success">
   <div class="success-icon">✅</div>
@@ -169,64 +109,118 @@
 </div>
 
 <script>
-// ─── Данные меню ──────────────────────────────────────────
-const MENU = [
-  { id: 1, name: "Гирос",          price: 640, emoji: "🥙" },
-  { id: 2, name: "Гриль",          price: 640, emoji: "🍖" },
-  { id: 3, name: "Классика",       price: 440, emoji: "🥪" },
-  { id: 4, name: "Хот-дог",        price: 340, emoji: "🌭" },
-  { id: 5, name: "Френч",          price: 620, emoji: "🥖" },
-  { id: 6, name: "Донер в багете", price: 620, emoji: "🥗" },
-  { id: 7, name: "Донер в лаваше", price: 620, emoji: "🫓" },
-  { id: 8, name: "Пицца",          price: 330, emoji: "🍕" },
-];
+// ─── Эмодзи для товаров ───────────────────────────────────────────────────────
+const EMOJI = {
+  "Гирос": "🥙", "Гриль": "🍖", "Классика": "🥪", "Хот-дог": "🌭",
+  "Френч": "🥖", "Донер в багете": "🥗", "Донер в лаваше": "🫓", "Пицца": "🍕",
+};
+const emoji = name => EMOJI[name] || "🍽";
 
-const qty = {};
-MENU.forEach(item => qty[item.id] = 0);
+// ─── Состояние ───────────────────────────────────────────────────────────────
+let SHOPS = [], ALL_PRICES = {}, MENU = [], qty = {}, currentShop = "";
 
-// ─── Telegram WebApp init ─────────────────────────────────
-const tg = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
+// ─── Telegram WebApp ─────────────────────────────────────────────────────────
+const tg   = window.Telegram?.WebApp || null;
 const isTg = !!tg;
-
 if (isTg) {
   tg.ready();
   tg.expand();
-  // Главная кнопка Telegram
   tg.MainButton.setText("Заказать");
   tg.MainButton.hide();
   tg.MainButton.onClick(sendOrder);
 } else {
-  // Fallback для тестирования в браузере
   const fb = document.getElementById("order-btn-fallback");
   fb.style.display = "block";
   fb.addEventListener("click", sendOrder);
 }
 
-// ─── Рендер ───────────────────────────────────────────────
+// ─── Читаем цены из URL ───────────────────────────────────────────────────────
+// Бот передаёт прайс как base64-encoded JSON в параметре ?prices=...
+function loadPricesFromUrl() {
+  const params  = new URLSearchParams(window.location.search);
+  const encoded = params.get("prices");
+
+  if (!encoded) {
+    showError("Меню не загружено.\nОткройте WebApp через команду /order в боте.");
+    return;
+  }
+
+  try {
+    // base64url → JSON
+    const json   = atob(encoded.replace(/-/g, '+').replace(/_/g, '/'));
+    const data   = JSON.parse(json);
+
+    SHOPS      = data.shops || [];
+    ALL_PRICES = data.menu  || {};   // {товар: {точка: цена}}
+
+    if (!SHOPS.length) throw new Error("Список точек пустой");
+
+    // Заполняем select точек
+    const sel = document.getElementById("shop-select");
+    sel.innerHTML = "";
+    SHOPS.forEach(shop => {
+      const opt = document.createElement("option");
+      opt.value = shop;
+      opt.textContent = shop;
+      sel.appendChild(opt);
+    });
+
+    currentShop = SHOPS[0];
+    buildMenuForShop(currentShop);
+    document.getElementById("main").style.display = "block";
+
+  } catch (e) {
+    showError("Ошибка при чтении меню: " + e.message);
+  }
+}
+
+function showError(msg) {
+  const el = document.getElementById("error-box");
+  el.textContent = msg;
+  el.style.display = "block";
+}
+
+// ─── Меню для выбранной точки ─────────────────────────────────────────────────
+function buildMenuForShop(shop) {
+  MENU = Object.entries(ALL_PRICES)
+    .map(([name, prices]) => ({ name, price: prices[shop] || 0 }))
+    .filter(item => item.price > 0);   // товары без цены для этой точки скрыты
+
+  qty = {};
+  MENU.forEach(item => qty[item.name] = 0);
+  render();
+}
+
+document.getElementById("shop-select").addEventListener("change", e => {
+  currentShop = e.target.value;
+  buildMenuForShop(currentShop);
+});
+
+// ─── Рендер ──────────────────────────────────────────────────────────────────
 function render() {
   const list = document.getElementById("items-list");
   list.innerHTML = "";
 
   MENU.forEach(item => {
-    const q = qty[item.id];
+    const q = qty[item.name] || 0;
     const card = document.createElement("div");
     card.className = "item-card" + (q > 0 ? " active" : "");
     card.innerHTML = `
-      <span class="item-emoji">${item.emoji}</span>
+      <span class="item-emoji">${emoji(item.name)}</span>
       <div class="item-info">
         <div class="item-name">${item.name}</div>
         <div class="item-price">${item.price.toLocaleString()} тг</div>
       </div>
       <div class="qty-ctrl">
-        <button class="qty-btn" data-id="${item.id}" data-delta="-1">−</button>
+        <button class="qty-btn" data-name="${item.name}" data-delta="-1">−</button>
         <span class="qty-num">${q}</span>
-        <button class="qty-btn" data-id="${item.id}" data-delta="1">+</button>
+        <button class="qty-btn" data-name="${item.name}" data-delta="1">+</button>
       </div>`;
     list.appendChild(card);
   });
 
-  const ordered = MENU.filter(i => qty[i.id] > 0);
-  const total   = ordered.reduce((s, i) => s + qty[i.id] * i.price, 0);
+  const ordered  = MENU.filter(i => (qty[i.name] || 0) > 0);
+  const total    = ordered.reduce((s, i) => s + qty[i.name] * i.price, 0);
   const hasItems = ordered.length > 0;
 
   document.getElementById("summary").style.display    = hasItems ? "block" : "none";
@@ -236,14 +230,13 @@ function render() {
     document.getElementById("summary-lines").innerHTML =
       ordered.map(i =>
         `<div class="summary-row">
-           <span>${i.name} × ${qty[i.id]}</span>
-           <span>${(qty[i.id] * i.price).toLocaleString()} тг</span>
+           <span>${i.name} × ${qty[i.name]}</span>
+           <span>${(qty[i.name] * i.price).toLocaleString()} тг</span>
          </div>`
       ).join("");
     document.getElementById("total-val").textContent = total.toLocaleString() + " тг";
   }
 
-  // Управляем кнопкой
   if (isTg) {
     hasItems ? tg.MainButton.show() : tg.MainButton.hide();
   } else {
@@ -251,36 +244,36 @@ function render() {
   }
 }
 
-// ─── Клик +/- ────────────────────────────────────────────
+// ─── Клик +/- ────────────────────────────────────────────────────────────────
 document.getElementById("items-list").addEventListener("click", e => {
   const btn = e.target.closest("[data-delta]");
   if (!btn) return;
-  qty[+btn.dataset.id] = Math.max(0, qty[+btn.dataset.id] + +btn.dataset.delta);
+  const name = btn.dataset.name;
+  qty[name]  = Math.max(0, (qty[name] || 0) + +btn.dataset.delta);
   render();
 });
 
-// ─── Отправка заказа ─────────────────────────────────────
+// ─── Отправка заказа ─────────────────────────────────────────────────────────
 function sendOrder() {
   const shop    = document.getElementById("shop-select").value;
-  const ordered = MENU.filter(i => qty[i.id] > 0);
-  const total   = ordered.reduce((s, i) => s + qty[i.id] * i.price, 0);
+  const ordered = MENU.filter(i => (qty[i.name] || 0) > 0);
+  const total   = ordered.reduce((s, i) => s + qty[i.name] * i.price, 0);
 
   const payload = {
     shop,
     items: ordered.map(i => ({
       name:  i.name,
-      qty:   qty[i.id],
+      qty:   qty[i.name],
       price: i.price,
-      total: qty[i.id] * i.price,
+      total: qty[i.name] * i.price,
     })),
     total,
   };
 
   if (isTg) {
-    tg.MainButton.showProgress();         // крутилка пока бот обрабатывает
-    tg.sendData(JSON.stringify(payload)); // отправляет данные в бот и закрывает WebApp
+    tg.MainButton.showProgress();
+    tg.sendData(JSON.stringify(payload));
   } else {
-    // Браузерный fallback
     console.log("Payload:", JSON.stringify(payload, null, 2));
     document.getElementById("main").style.display    = "none";
     document.getElementById("success").style.display = "block";
@@ -289,9 +282,8 @@ function sendOrder() {
   }
 }
 
-render();
+// ─── Старт ───────────────────────────────────────────────────────────────────
+loadPricesFromUrl();
 </script>
 </body>
-</html>
-
 </html>
