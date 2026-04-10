@@ -147,8 +147,12 @@ function loadPricesFromUrl() {
 
   try {
     // base64url → JSON
-    const json   = atob(encoded.replace(/-/g, '+').replace(/_/g, '/'));
-    const data   = JSON.parse(json);
+    const bytes = Uint8Array.from(
+  atob(encoded.replace(/-/g, '+').replace(/_/g, '/')),
+  c => c.charCodeAt(0)
+);
+    const json = new TextDecoder().decode(bytes);
+    const data = JSON.parse(json);
 
     SHOPS      = data.shops || [];
     ALL_PRICES = data.menu  || {};   // {товар: {точка: цена}}
