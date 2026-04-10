@@ -147,11 +147,7 @@ function loadPricesFromUrl() {
 
   try {
     // base64url → JSON
-    const bytes = Uint8Array.from(
-  atob(encoded.replace(/-/g, '+').replace(/_/g, '/')),
-  c => c.charCodeAt(0)
-);
-    const json = new TextDecoder().decode(bytes);
+    const json = decodeURIComponent(escape(atob(encoded.replace(/-/g, '+').replace(/_/g, '/'))));
     const data = JSON.parse(json);
 
     SHOPS      = data.shops || [];
